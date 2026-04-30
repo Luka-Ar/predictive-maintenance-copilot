@@ -1,0 +1,64 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# Build and packaging
+build/
+dist/
+*.egg-info/
+
+# Tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# IDE/editor files
+.vscode/
+.idea/
+
+# Environment variables
+.env
+.env.*
+
+# Database
+predictions.db
+*.db
+
+# Data files
+data/*.csv
+!data/.gitkeep
+
+# Model artifacts
+models/*.joblib
+models/*.pkl
+models/*.onnx
+models/*.bin
+!models/.gitkeep
+
+# Test and debug files
+final_test.py
+test_system.py
+verify_system.py
+*.ipynb_local
+
+# Frontend build
+web/.next/
+web/out/
+web/dist/
+web/build/
+
+# OS files
+.DS_Store
+Thumbs.db
