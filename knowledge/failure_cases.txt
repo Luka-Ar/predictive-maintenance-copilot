@@ -1,0 +1,13 @@
+# Historical Failure Cases
+
+Case 1:
+High torque combined with high tool wear resulted in tool breakage and production downtime.
+
+Case 2:
+Large temperature difference between air and process temperature was linked to cooling system degradation.
+
+Case 3:
+High rotational speed with abnormal torque fluctuation indicated possible bearing wear.
+
+Case 4:
+Repeated high tool wear events were reduced after introducing scheduled tool replacement.

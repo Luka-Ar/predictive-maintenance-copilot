@@ -1,0 +1,15 @@
+# Safety Guidelines
+
+Do not continue operation if multiple risk indicators appear together.
+
+Critical combinations:
+- High torque + high tool wear
+- High temperature difference + high torque
+- Rapid tool wear increase + abnormal rotational speed
+
+When critical combinations are detected:
+- Pause operation if safe
+- Notify maintenance technician
+- Inspect tool condition
+- Check lubrication and cooling
+- Record the event in maintenance history
