@@ -6,6 +6,10 @@ type PredictionResponse = {
   prediction: 0 | 1;
   failure_probability: number;
   explanation: string;
+  rag_sources?: { source: string; category: string }[];
+  alerts?: { label: string; severity: "warning" | "alert" | "critical" }[];
+  recommended_actions?: string[];
+  trend_alerts?: string[];
 };
 
 type FormData = {
@@ -26,8 +30,15 @@ type HistoryItem = {
   explanation: string;
 };
 
+type HealthStatus = {
+  api: "ok" | "unreachable";
+  ollama: "ok" | "unreachable";
+  database: "ok" | "unreachable";
+};
+
 const API_URL = "http://127.0.0.1:8000/predict";
 const HISTORY_URL = "http://127.0.0.1:8000/history";
+const HEALTH_URL = "http://127.0.0.1:8000/health";
 
 type ConfirmationModalProps = {
   isOpen: boolean;
@@ -200,6 +211,7 @@ export default function Home() {
   const [historyError, setHistoryError] = useState<string | null>(null);
   const [clearingHistory, setClearingHistory] = useState(false);
   const [showClearModal, setShowClearModal] = useState(false);
+  const [health, setHealth] = useState<HealthStatus | null>(null);
 
   const probabilityPercent = result
     ? Math.max(0, Math.min(100, result.failure_probability * 100))
@@ -237,6 +249,23 @@ export default function Home() {
     void fetchHistory();
   }, [fetchHistory]);
 
+  useEffect(() => {
+    const fetchHealth = async () => {
+      try {
+        const response = await fetch(HEALTH_URL);
+        if (!response.ok) {
+          throw new Error("Health check failed");
+        }
+        const data: HealthStatus = await response.json();
+        setHealth(data);
+      } catch {
+        setHealth({ api: "unreachable", ollama: "unreachable", database: "unreachable" });
+      }
+    };
+
+    void fetchHealth();
+  }, []);
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
@@ -261,6 +290,11 @@ export default function Home() {
       setResult(data);
       await fetchHistory();
     } catch (submitError) {
+      if (submitError instanceof TypeError) {
+        setError("Backend is not running. Start FastAPI with: uvicorn api.main:app --reload");
+        return;
+      }
+
       const message =
         submitError instanceof Error
           ? submitError.message
@@ -324,6 +358,32 @@ export default function Home() {
     return parsedDate.toLocaleString();
   };
 
+  const categoryStyles = (category: string) => {
+    switch (category.toLowerCase()) {
+      case "safety":
+        return "border-amber-200 bg-amber-50 text-amber-800";
+      case "sop":
+        return "border-indigo-200 bg-indigo-50 text-indigo-800";
+      case "manual":
+        return "border-blue-200 bg-blue-50 text-blue-800";
+      case "failure case":
+        return "border-rose-200 bg-rose-50 text-rose-800";
+      default:
+        return "border-slate-200 bg-slate-50 text-slate-700";
+    }
+  };
+
+  const alertStyles = (severity: "warning" | "alert" | "critical") => {
+    switch (severity) {
+      case "warning":
+        return "border-amber-200 bg-amber-50 text-amber-800";
+      case "critical":
+        return "border-rose-200 bg-rose-50 text-rose-700";
+      default:
+        return "border-orange-200 bg-orange-50 text-orange-800";
+    }
+  };
+
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_#f8fafc_0%,_#e2e8f0_45%,_#cbd5e1_100%)] px-4 py-12 sm:py-16">
       <section className="mx-auto w-full max-w-6xl">
@@ -334,6 +394,27 @@ export default function Home() {
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
             Submit machine sensor values to estimate failure risk and get a concise explanation.
           </p>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-xs text-slate-600">
+            <span className="font-semibold text-slate-700">Status</span>
+            <span
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-semibold ${
+                health?.api === "ok"
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                  : "border-rose-200 bg-rose-50 text-rose-700"
+              }`}
+            >
+              API: {health?.api === "ok" ? "Online" : "Offline"}
+            </span>
+            <span
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-semibold ${
+                health?.ollama === "ok"
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                  : "border-rose-200 bg-rose-50 text-rose-700"
+              }`}
+            >
+              Ollama: {health?.ollama === "ok" ? "Online" : "Offline"}
+            </span>
+          </div>
         </header>
 
         <div className="grid grid-cols-1 gap-7 lg:grid-cols-2">
@@ -513,6 +594,83 @@ export default function Home() {
                   <p className="mt-2 rounded-lg border border-slate-300 bg-slate-100 p-3 text-sm leading-6 text-slate-800">
                     {result.explanation}
                   </p>
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium text-slate-700">Condition Alerts</p>
+                  {result.alerts && result.alerts.length > 0 ? (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {result.alerts.map((alert) => (
+                        <span
+                          key={`${alert.label}-${alert.severity}`}
+                          className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${alertStyles(
+                            alert.severity
+                          )}`}
+                        >
+                          {alert.label}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-sm text-slate-500">No condition alerts.</p>
+                  )}
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium text-slate-700">Trend Alerts</p>
+                  {result.trend_alerts && result.trend_alerts.length > 0 ? (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {result.trend_alerts.map((alert) => (
+                        <span
+                          key={alert}
+                          className="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700"
+                        >
+                          {alert}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-sm text-slate-500">No trend alerts.</p>
+                  )}
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium text-slate-700">Recommended Actions</p>
+                  {result.recommended_actions && result.recommended_actions.length > 0 ? (
+                    <ul className="mt-2 space-y-2 text-sm text-slate-700">
+                      {result.recommended_actions.map((action) => (
+                        <li key={action} className="flex items-start gap-2">
+                          <span className="mt-1 h-1.5 w-1.5 rounded-full bg-slate-400" />
+                          <span>{action}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="mt-2 text-sm text-slate-500">No recommended actions.</p>
+                  )}
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium text-slate-700">Knowledge Sources</p>
+                  {result.rag_sources && result.rag_sources.length > 0 ? (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {result.rag_sources.map((item) => (
+                        <span
+                          key={`${item.source}-${item.category}`}
+                          className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold shadow-sm ${categoryStyles(
+                            item.category
+                          )}`}
+                        >
+                          <span className="text-[10px] uppercase tracking-[0.08em] opacity-80">
+                            [{item.category}]
+                          </span>
+                          <span className="font-semibold text-slate-800">{item.source}</span>
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-sm text-slate-500">No sources retrieved.</p>
+                  )}
                 </div>
               </div>
             )}

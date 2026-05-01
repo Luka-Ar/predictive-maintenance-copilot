@@ -1,246 +1,183 @@
-# Predictive Maintenance Copilot
+# Predictive Maintenance Copilot — Hybrid Industrial AI Decision Support System
 
-A hybrid AI predictive maintenance MVP that estimates machine failure risk from sensor data using machine learning and enhances interpretability with local Gemma (Ollama) explanations.
+A hybrid ML + RAG + Local LLM platform that transforms machine sensor data into predictive maintenance intelligence, operational alerts, and actionable maintenance recommendations.
 
-## 🎯 Overview
+## Overview
 
-This project demonstrates a complete end-to-end system for predictive maintenance that combines:
-- **Machine Learning** - RandomForest classifier trained on industrial sensor data
-- **Risk Scoring** - Threshold-based probability predictions
-- **Local LLM Integration** - Ollama Gemma for natural language explanations
-- **Modern Web UI** - Real-time prediction dashboard with history tracking
-- **Clean Architecture** - Modular FastAPI backend + Next.js React frontend
+Predictive Maintenance Copilot is a Phase 2 evolution of an industrial ML dashboard into a full operational intelligence platform. It combines a classical ML prediction engine with governance, condition alerts, and a local LLM powered by retrieval-augmented knowledge.
 
-## ✨ Features
+## Phase Evolution
 
-- 🤖 **ML-Based Predictions** - RandomForest model with configurable failure probability threshold
-- 💬 **Explainable AI** - Local Gemma LLM generates interpretable explanations for each prediction
-- 📊 **Real-time Dashboard** - Next.js UI for submitting predictions and viewing results
-- 📈 **Prediction History** - SQLite database stores all predictions with timestamps
-- 🎨 **Modern UI** - Tailwind CSS styling with visual risk indicators (Low/High Risk badges)
-- ⚡ **Fast API** - FastAPI backend with CORS support for seamless frontend integration
-- 🔄 **End-to-End** - Complete workflow from sensor input → ML model → LLM explanation → UI display
+- Phase 1: ML Predictive Dashboard
+- Phase 2: Hybrid AI + RAG + Governance
 
-## 🏗️ Architecture
+## Core Features
+
+- ML prediction engine for failure risk probability
+- Hybrid AI explanations with local Gemma via Ollama
+- RAG knowledge retrieval using ChromaDB
+- Condition alerts with severity governance and actions
+- Trend intelligence signals (foundation for Phase 3)
+- Operational intelligence surface for alerts, actions, and governance
+- Clean FastAPI + Next.js architecture
+
+## Architecture Diagram
 
 ```
-Sensor Input (Temperature, RPM, Torque, Tool Wear, etc.)
-    ↓
-FastAPI Backend
-    ├─ Feature Preprocessing
-    ├─ RandomForest ML Model (threshold-based)
-    ├─ Failure Probability Calculation
-    └─ Ollama Gemma LLM for Explanation
-    ↓
-SQLite History Database
-    ↓
-Next.js React Frontend Dashboard
-    └─ Risk Indicators, Explanations, History View
+Sensor Input
+  → ML Prediction Engine
+  → Rule Governance Layer
+  → RAG Knowledge Retrieval (ChromaDB)
+  → Gemma / Local LLM Reasoning
+  → Condition Alerts
+  → Trend Intelligence (Phase 3 placeholder)
+  → Recommended Actions
+  → Frontend Dashboard
 ```
 
-## 📦 Tech Stack
+## Tech Stack
 
-**Backend:**
-- Python 3.13
+Backend
+- Python 3.10+
 - FastAPI + Uvicorn
-- scikit-learn (RandomForest)
-- SQLite3
-- Requests (Ollama API)
-- Joblib (model serialization)
+- scikit-learn
+- SQLite
+- ChromaDB
 
-**Frontend:**
-- Next.js 16.2 (React 19)
+Frontend
+- Next.js (React)
 - TypeScript
 - Tailwind CSS
-- React Hooks for state management
 
-**ML & LLM:**
-- Ollama (local LLM runtime)
-- Gemma 4 (language model)
-- scikit-learn (model training)
+ML + LLM
+- RandomForest (baseline)
+- Ollama (local runtime)
+- Gemma (local LLM)
 
-**Data:**
-- pandas / NumPy (data processing)
-- UCI AI4I2020 Dataset (industrial maintenance data)
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Python 3.10+
-- Node.js 18+
-- Ollama installed and running
-
-### 1. Backend Setup
-
-```bash
-# Create virtual environment
-python -m venv .venv
-
-# Activate virtual environment
-# On Windows:
-.venv\Scripts\activate
-# On macOS/Linux:
-source .venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Start FastAPI server
-uvicorn api.main:app --reload
-# Server will run on http://127.0.0.1:8000
-```
-
-### 2. Frontend Setup
-
-```bash
-cd web
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-# Frontend will run on http://localhost:3000
-```
-
-### 3. LLM Setup
-
-```bash
-# Pull Gemma 4 model (one-time)
-ollama pull gemma4:e2b
-
-# Run Ollama service
-ollama run gemma4:e2b
-# LLM will be available at localhost:11434
-```
-
-### 4. Train ML Model
-
-```bash
-# From project root
-python training/train_baseline.py
-# This trains the RandomForest model on the AI4I2020 dataset
-# Outputs: models/failure_model.joblib, models/feature_columns.joblib
-```
-
-## 📖 Project Structure
+## Project Structure
 
 ```
 predictive-maintenance-copilot/
-├── api/                        # FastAPI backend
-│   └── main.py                # API routes, model serving, Ollama integration
-├── training/                  # ML training pipeline
-│   └── train_baseline.py     # RandomForest training script
-├── models/                    # Trained model artifacts
-│   ├── failure_model.joblib  # Serialized model
-│   └── feature_columns.joblib # Feature metadata
-├── data/                      # Dataset directory
-│   └── ai4i2020.csv         # UCI dataset (not in repo)
-├── notebooks/                # Jupyter exploration
-│   └── 01_explore.py        # Data exploration notebook
-├── web/                       # Next.js frontend
-│   ├── src/app/
-│   │   └── page.tsx         # Main React component
-│   ├── package.json
-│   └── tsconfig.json
-├── requirements.txt          # Python dependencies
-├── README.md                 # This file
-└── .gitignore               # Git ignore rules
+├── api/            FastAPI backend and governance
+├── web/            Next.js frontend UI
+├── rag/            RAG indexing and query tools
+├── knowledge/      Curated knowledge base
+├── chroma_db/      Local vector database storage
+├── models/         Trained model artifacts
+├── training/       Training pipeline
+├── README.md       Product overview
+├── CHANGELOG.md    Release history
+├── ROADMAP.md      Phase planning
+├── CONTRIBUTING.md Contribution guide
+├── LICENSE         MIT license
+├── requirements.txt Python dependencies
+└── .gitignore      Repo hygiene
 ```
 
-## 🔧 API Endpoints
+## Screenshots
 
-### POST /predict
-Submit machine sensor readings for failure risk prediction.
+Placeholders (add images to screenshots/ and update links):
+- Dashboard Overview
+  - screenshots/dashboard-overview.png
+- Condition Alerts
+  - screenshots/condition-alerts.png
+- Recommended Actions
+  - screenshots/recommended-actions.png
+- Knowledge Sources
+  - screenshots/knowledge-sources.png
 
-**Request:**
-```json
-{
-  "Type": "M",
-  "Air_temperature_K": 300.5,
-  "Process_temperature_K": 310.2,
-  "Rotational_speed_rpm": 1500,
-  "Torque_Nm": 40.5,
-  "Tool_wear_min": 5
-}
+## Installation Guide
+
+Prerequisites
+- Python 3.10+
+- Node.js 18+
+- Ollama
+
+Quick setup
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-**Response:**
-```json
-{
-  "prediction": 0,
-  "failure_probability": 0.15,
-  "explanation": "The current operating parameters indicate normal conditions..."
-}
+## Local Development Setup
+
+Terminal 1: Ollama
+```bash
+ollama pull gemma3:1b
+ollama pull nomic-embed-text
+ollama run gemma3:1b
 ```
 
-### GET /history
-Retrieve prediction history (latest 20 predictions).
-
-**Response:**
-```json
-[
-  {
-    "id": 1,
-    "created_at": "2026-04-30T11:05:26.081848",
-    "machine_type": "M",
-    "failure_probability": 0.15,
-    "explanation": "..."
-  }
-]
+Terminal 2: Backend
+```bash
+uvicorn api.main:app --reload
 ```
 
-### DELETE /history
-Clear all prediction history from the database.
+Terminal 3: Frontend
+```bash
+cd web
+npm install
+npm run dev
+```
 
-## 🧠 Model Details
+## How It Works
 
-- **Algorithm:** RandomForest Classifier (n_estimators=200)
-- **Features:** Air/Process Temperature, Rotational Speed, Torque, Tool Wear, Machine Type
-- **Threshold:** 0.3 (failure probability)
-- **Training Data:** UCI AI4I2020 (predictive maintenance dataset)
-- **Performance:** ~98% accuracy on test set
+1. Sensor inputs are normalized and passed into the ML model.
+2. Rule governance classifies conditions and triggers alerts.
+3. RAG retrieves relevant maintenance context from ChromaDB.
+4. Gemma generates explanations constrained by validated status.
+5. The UI renders risk, alerts, trends, and actions.
 
-## 📝 Notes
+## Risk Tiers
 
-- **Prototype/MVP Status:** This is an educational demonstration of hybrid AI architecture, not production-ready for safety-critical systems
-- **Local LLM:** Uses Ollama for local inference - no cloud dependencies or API keys required
-- **Educational Purpose:** Designed to showcase full-stack AI development from ML training through LLM integration to modern web UI
-- **Real-World Deployment:** Before production use in actual industrial settings, validate with domain experts and real operational data
+Example mapping used for operational communication:
+- 0–10%: Normal
+- 10–25%: Advisory
+- 25–50%: Warning
+- 50%+: Critical
 
-## 🎓 Learning Resources
+## Condition Alerts
 
-This project demonstrates:
-- Building end-to-end ML systems
-- Integrating local LLMs for explainability
-- FastAPI backend development
-- React/Next.js frontend patterns
-- Database persistence
-- API design and documentation
+- Thermal Warning / Alert / Critical Thermal Alert
+- Torque Load Alert
+- Preventive Wear Advisory / Maintenance Alert / Urgent Wear Alert
 
-## 📸 Screenshots
+## Recommended Actions
 
-See `screenshots/` folder for dashboard examples:
-- Main prediction dashboard
-- Low-risk prediction example
-- High-risk prediction example
-- Prediction history view
+Actions are aligned to alert severity, such as:
+- Monitor wear trend
+- Inspect tool condition
+- Check cooling efficiency
 
-## 🔗 Links
+## Knowledge Sources / RAG
 
-- **GitHub:** https://github.com/Luka-Ar/predictive-maintenance-copilot
-- **Dataset:** UCI AI4I2020 Predictive Maintenance Dataset
-- **Ollama:** https://ollama.ai
-- **Gemma:** Google's open-source language model
+The RAG layer uses a curated knowledge base:
+- maintenance_sop.txt
+- safety_guidelines.txt
+- machine_manual.txt
+- failure_cases.txt
 
-## 📄 License
+## Future Roadmap
 
-This project is open source and available under the MIT License.
+See ROADMAP.md for Phase 3 planning.
 
-## 👤 Author
+## Version History
 
-Created as a demonstration of hybrid AI architecture combining machine learning with local LLM integration for enhanced interpretability.
+v1.0 — Phase 1
+- Initial predictive maintenance ML model
+- Dashboard UI
+- Failure probability prediction
 
----
+v2.0 — Phase 2
+- Gemma integration
+- RAG knowledge base
+- ChromaDB
+- Condition alerts
+- Maintenance governance
+- Recommended actions
+- Operational intelligence
 
-**Ready to explore predictive AI? Start with the Quick Start guide above!**
+## License
+
+MIT License

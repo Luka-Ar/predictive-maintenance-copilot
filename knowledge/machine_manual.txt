@@ -1,0 +1,14 @@
+# Machine Operating Manual
+
+Normal operating conditions:
+- Air temperature: 295K to 310K
+- Process temperature: 305K to 325K
+- Rotational speed: 1000 to 1600 rpm
+- Torque: 20 to 55 Nm
+- Tool wear: below 150 minutes
+
+High torque may indicate excessive mechanical load, friction, misalignment, worn bearings, or tool degradation.
+
+A large temperature difference between air temperature and process temperature may indicate cooling inefficiency, abnormal heat generation, or process instability.
+
+If torque exceeds 60 Nm, inspect load conditions, lubrication, shaft alignment, and tool condition.

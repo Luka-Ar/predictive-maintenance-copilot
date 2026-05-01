@@ -1,0 +1,15 @@
+# Maintenance SOP
+
+If tool wear exceeds 150 minutes, maintenance inspection is recommended.
+
+If high torque and high tool wear occur together, prioritize immediate inspection.
+
+Recommended checks:
+- Inspect tool condition
+- Check lubrication
+- Check shaft alignment
+- Inspect bearings
+- Review recent load changes
+- Check cooling system performance
+
+If failure probability is elevated, reduce load and monitor sensor readings before continuing operation.

@@ -47,6 +47,11 @@ models/*.onnx
 models/*.bin
 !models/.gitkeep
 
+# Vector database (ChromaDB)
+chroma_db/*
+!chroma_db/.gitkeep
+!chroma_db/README.md
+
 # Test and debug files
 final_test.py
 test_system.py
@@ -58,6 +63,16 @@ web/.next/
 web/out/
 web/dist/
 web/build/
+
+# Frontend dependencies
+web/node_modules/
+node_modules/
+
+# Frontend logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
 # OS files
 .DS_Store

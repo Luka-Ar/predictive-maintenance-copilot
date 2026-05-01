@@ -4,11 +4,11 @@ Thank you for your interest in contributing to this project! This document provi
 
 ## Project Status
 
-This is an **educational MVP** demonstrating hybrid AI architecture (ML + Local LLM). Contributions are welcome, but please note:
+This is a **Phase 2 product-grade open-source release** focused on hybrid AI for predictive maintenance (ML + RAG + local LLM). Contributions are welcome, but please note:
 
 - The project is not intended for production use in safety-critical systems
-- Core functionality should remain unchanged
-- Focus on code quality, documentation, and educational value
+- Core prediction logic should remain stable unless changes are well-justified
+- Focus on reliability, documentation, and maintainability
 
 ## How to Contribute
 
